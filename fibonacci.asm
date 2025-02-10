@@ -1,0 +1,13 @@
+# Fibonacci Sequence with n = 8
+# Register usage: $0: n, $1: f1, $2: f2, $3: 1
+# return the value to d0
+
+load:   MOV  $0, 8       # initialize the counter n = 8  | 0011 0000 00001000  | 3008
+        MOV  $1, 1       # initialize f1 = 1             | 0011 0001 00000001  | 3101
+        MOV  $2, -1      # initialize f2 = -1            | 0011 0010 11111111  | 32FF
+        MOV  $3, 1       # load const 1                  | 0011 0011 00000001  | 3301
+loop:   ADD  $1, $1, $2  # f1 = f1 + f2                  | 0010 0001 0001 0010 | 2112
+        SUB  $2, $1, $2  # f2 = f1 - f2                  | 0100 0010 0001 0010 | 4212
+        SUB  $0, $0, $3  # n = n - 1                     | 0100 0000 0000 0011 | 4003
+        JMPZ $0, -3      # continue the loop until done  | 0101 0000 11111100  | 50FC
+store:  MOV  d0, $1      # store result in d0            | 0001 0000 00000000  | 1000
