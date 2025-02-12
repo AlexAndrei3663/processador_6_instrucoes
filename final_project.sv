@@ -31,8 +31,8 @@ module regfile #(parameter WIDTH = 16, REGBITS = 4)
   always @(posedge clk)
     if (w_wr) ram[w_addr] <= w_data;
 
-  assign rp_data = rp_rd ? ram[rp_addr] : 'z;
-  assign rq_data = rq_rd ? ram[rq_addr] : 'z;
+  assign rp_data = rp_rd ? ram[rp_addr] : '0;
+  assign rq_data = rq_rd ? ram[rq_addr] : '0;
 endmodule
 
 // Memoria de dados - D
@@ -48,7 +48,7 @@ module datamemory #(parameter WIDTH = 16, REGBITS = 8)
   always @(posedge clk)
     if (wr) mem[addr] <= w_data;
 
-  assign r_data = rd ? mem[addr] : 'z;
+  assign r_data = rd ? mem[addr] : '0;
 endmodule
 
 // Detector de zero
