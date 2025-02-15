@@ -1,3 +1,12 @@
+// Mux2
+module mux2 #(parameter WIDTH = 16)
+             (input  logic [WIDTH-1:0] d0, d1,
+              input  logic             s, 
+              output logic [WIDTH-1:0] y);
+
+  assign y = s ? d1 : d0;
+endmodule
+
 // Mux para seleção do W_data
 module mux3 #(parameter WIDTH = 16)
              (input  logic [WIDTH-1:0] d0, d1, d2,
@@ -5,9 +14,9 @@ module mux3 #(parameter WIDTH = 16)
               output logic [WIDTH-1:0] y);
 
   typedef enum logic [1:0] {
-    ALU   = 6'b00,
-    DREG  = 6'b01,
-    WDATA = 6'b10
+    ALU   = 2'b00,
+    DREG  = 2'b01,
+    WDATA = 2'b10
   } mux_options;
 
   always_comb 
@@ -95,9 +104,9 @@ module alu #(parameter WIDTH = 16)
               output logic [WIDTH-1:0] y);
 
   typedef enum logic [1:0] {
-    BYPASS = 6'b00,
-    ADD    = 6'b01,
-    SUB    = 6'b10
+    BYPASS = 2'b00,
+    ADD    = 2'b01,
+    SUB    = 2'b10
   } alu_operations;
 
   logic [WIDTH-1:0] sum_result, inv_cond, inv_result;
@@ -127,17 +136,17 @@ module operational_block #(parameter WIDTH = 16, REGBITS = 4)
 
     logic [15:0] rp_data, rq_data, alu_result, mux3_result;
 
-    mux3          #(WIDTH)          mux3_select(alu_result, r_data, rf_w_data, rf_s, mux3_result);
+    mux3          #(WIDTH)          mux3_select(alu_result, r_data, {'0, rf_w_data}, rf_s, mux3_result);
     register_bank #(WIDTH, REGBITS) rf(clk, 
-                                    mux3_result, 
-                                    rf_w_addr, 
-                                    rf_rp_addr, 
-                                    rf_rq_addr, 
-                                    rf_w_wr, 
-                                    rf_rp_rd, 
-                                    rf_rq_rd, 
-                                    rp_data, 
-                                    rq_data);
-    alu           #(WIDTH)          alu_control(rp_data, rq_data, alu_s, mux3_result);
-    zero_detect    #(WIDTH)          zero_detect(rp_data, rf_rp_zero);
+                                       mux3_result, 
+                                       rf_w_addr, 
+                                       rf_rp_addr, 
+                                       rf_rq_addr, 
+                                       rf_w_wr, 
+                                       rf_rp_rd, 
+                                       rf_rq_rd, 
+                                       rp_data, 
+                                       rq_data);
+    alu           #(WIDTH)          alu_control(rp_data, rq_data, alu_s, alu_result);
+    zero_detect   #(WIDTH)          zero_detect(rp_data, rf_rp_zero);
 endmodule

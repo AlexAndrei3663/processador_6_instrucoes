@@ -34,6 +34,7 @@ module unidade_controle(input  logic        clk, reset,
     logic [15:0] d_PC, d_IR, IR_data;
 
     assign d_IR = {8'b0, IR_data[7:0]};
+    assign I_addr = d_PC;
 
     PC PC_dev(clk, d_PC, d_IR, d_PC, PC_ld, PC_clr, PC_inc);
     IR IR_dev(clk, reset, IR_ld, I_data, IR_data);
@@ -50,10 +51,10 @@ module unidade_controle(input  logic        clk, reset,
                                 alu_s0, alu_s1);
 endmodule
 
-module PC(input         clk,
-          input  [15:0] d_PC, d_IR,
-          output [15:0] q,
-          input         ld, clr, up);
+module PC(input  logic        clk,
+          input  logic [15:0] d_PC, d_IR,
+          output logic [15:0] q,
+          input  logic        ld, clr, up);
 
     always_ff @(posedge clk)
         if (clr) q <= 16'b0;
@@ -62,7 +63,7 @@ module PC(input         clk,
 
 endmodule
 
-module IR(input                clk, reset, ld
+module IR(input   logic        clk, reset, ld,
           input   logic [15:0] d,
           output  logic [15:0] q);
 
@@ -87,7 +88,7 @@ module bloco_controle(input  logic        clk, reset,
     statetype state, nextstate; 
     logic [1:0] alu;
     logic [1:0] rf;
-    logic [3:0] op;
+    opcode op;
     logic [3:0] Ra, Rb, Rc;
     logic [7:0] d, C;
     
@@ -98,9 +99,10 @@ module bloco_controle(input  logic        clk, reset,
     assign Rb               = IR_data[7:4];
     assign Rc               = IR_data[3:0];
     assign d                = IR_data[7:0];
+    assign RF_W_data        = IR_data[7:0];
 
     always_ff @(posedge clk, posedge reset)
-        if (reset) state <= idle;
+        if (reset) state <= INICIO;
         else       state <= nextstate;
 
     always_comb
@@ -109,11 +111,10 @@ module bloco_controle(input  logic        clk, reset,
             PC_ld = 0; PC_clr = 0; PC_inc = 0; I_rd = 0; IR_ld = 0;
             D_addr = 8'b00000000;
             D_rd = 0; D_wr = 0;
-            RF_W_data = 8'b00000000;
             rf = 2'b00;
             RF_W_addr = 4'b0000; RF_Rp_addr = 4'b0000; RF_Rq_addr = 4'b0000;
             RF_W_wr = 0; RF_Rp_rd = 0; RF_Rq_rd = 0;
-            alu = 0'b00;
+            alu = 2'b00;
 
             case (state)
                 INICIO:
@@ -143,7 +144,7 @@ module bloco_controle(input  logic        clk, reset,
                         D_addr    = d;
                         D_wr      = 1;
                         RF_Rp_addr = Ra;
-                        RF_Rp_wr   = 1;
+                        RF_Rp_rd   = 1;
                     end
                 SOMAR:
                     begin
@@ -187,11 +188,10 @@ module bloco_controle(input  logic        clk, reset,
                         PC_ld = 0; PC_clr = 0; PC_inc = 0; I_rd = 0; IR_ld = 0;
                         D_addr = 8'b00000000;
                         D_rd = 0; D_wr = 0;
-                        RF_W_data = 8'b00000000;
                         rf = 2'b00;
                         RF_W_addr = 4'b0000; RF_Rp_addr = 4'b0000; RF_Rq_addr = 4'b0000;
                         RF_W_wr = 0; RF_Rp_rd = 0; RF_Rq_rd = 0;
-                        alu = 0'b00;
+                        alu = 2'b00;
                     end
 
             endcase
