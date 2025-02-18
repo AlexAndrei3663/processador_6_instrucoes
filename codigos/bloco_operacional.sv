@@ -149,4 +149,6 @@ module operational_block #(parameter WIDTH = 16, REGBITS = 4)
                                        rq_data);
     alu           #(WIDTH)          alu_control(rp_data, rq_data, alu_s, alu_result);
     zero_detect   #(WIDTH)          zero_detect(rp_data, rf_rp_zero);
+    
+    assign w_data = rp_data;
 endmodule
