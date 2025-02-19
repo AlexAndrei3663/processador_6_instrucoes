@@ -33,7 +33,7 @@ module unidade_controle(input  logic        clk, reset,
     logic PC_ld, PC_clr, PC_inc, IR_ld;
     logic [15:0] d_PC, d_IR, IR_data;
 
-    assign d_IR = {8'bIR_data[7], IR_data[7:0]};
+  assign d_IR = {{8{IR_data[7]}}, IR_data[7:0]};
     assign I_addr = d_PC;
 
     PC PC_dev(clk, d_PC, d_IR, d_PC, PC_ld, PC_clr, PC_inc);
