@@ -1,15 +1,3 @@
-// Bloco para a memória de programa
-module program_memory(input   logic [15:0] addr,
-                      input   logic        rd,
-                      output  logic [15:0] data);
-
-    logic [15:0] mem[15:0];
-
-    initial $readmemh("memfile.dat", mem);
-    
-    assign data = rd ? mem[addr] : '0;
-endmodule
-
 // Bloco do processador
 module mips(input logic clk, rst,
             input logic [15:0] i_data, r_data,

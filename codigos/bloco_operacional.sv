@@ -44,22 +44,6 @@ module register_bank #(parameter WIDTH = 16, REGBITS = 4)
   assign rq_data = rq_rd ? ram[rq_addr] : '0;
 endmodule
 
-// Memoria de dados - D
-module data_memory #(parameter WIDTH = 16, REGBITS = 8)
-                (input  logic               clk, 
-                 input  logic [WIDTH-1:0]   w_data, 
-                 input  logic [REGBITS-1:0] addr, 
-                 input  logic               wr, rd, 
-                 output logic [WIDTH-1:0]   r_data);
-
-   logic [WIDTH-1:0] mem [2**REGBITS-1:0];
-
-  always @(posedge clk)
-    if (wr) mem[addr] <= w_data;
-
-  assign r_data = rd ? mem[addr] : '0;
-endmodule
-
 // Detector de zero
 module zero_detect #(parameter WIDTH = 16)
                    (input  logic [WIDTH-1:0] a, 
@@ -136,7 +120,7 @@ module operational_block #(parameter WIDTH = 16, REGBITS = 4)
 
     logic [15:0] rp_data, rq_data, alu_result, mux3_result;
 
-  mux3          #(WIDTH)          mux3_select(alu_result, r_data, {{8{rf_w_data[7]}}, rf_w_data}, rf_s, mux3_result);
+	mux3          #(WIDTH)          mux3_select(alu_result, r_data, {{8{rf_w_data[7]}}, rf_w_data}, rf_s, mux3_result);
     register_bank #(WIDTH, REGBITS) rf(clk, 
                                        mux3_result, 
                                        rf_w_addr, 
