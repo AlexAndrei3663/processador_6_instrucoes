@@ -136,7 +136,7 @@ module operational_block #(parameter WIDTH = 16, REGBITS = 4)
 
     logic [15:0] rp_data, rq_data, alu_result, mux3_result;
 
-    mux3          #(WIDTH)          mux3_select(alu_result, r_data, {'0, rf_w_data}, rf_s, mux3_result);
+  mux3          #(WIDTH)          mux3_select(alu_result, r_data, {{8{rf_w_data[7]}}, rf_w_data}, rf_s, mux3_result);
     register_bank #(WIDTH, REGBITS) rf(clk, 
                                        mux3_result, 
                                        rf_w_addr, 
