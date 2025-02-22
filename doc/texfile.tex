@@ -1,0 +1,59 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\graphicspath{{Figures/}{Images/}}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{textcomp}
+\usepackage{parskip}
+\usepackage{hyperref}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+	\sbox\pandoc@box{#1}%
+	\Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+	\Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+	\ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+	\ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+	\else\usebox{\pandoc@box}%
+	\fi%
+}
+
+\begin{document}
+
+\title{Your Title}
+\author{\IEEEauthorblockN{Luiz Aguiar}
+\IEEEauthorblockA{Universidade de Brasília\\
+Faculdade de Ciência e\\ Tecnologia em Engenharia\\
+Brasília - DF\\
+Email: 190016990@aluno.unb.br}
+\and
+\IEEEauthorblockN{Aluno2}
+\IEEEauthorblockA{Universidade de Brasília\\
+Faculdade de Ciência e \\Tecnologia em Engenharia\\
+Brasília - DF\\
+Email:}
+\and
+\IEEEauthorblockN{Aluno 3}
+\IEEEauthorblockA{Universidade de Brasília\\
+Faculdade de Ciência e \\Tecnologia em Engenharia\\
+Brasília - DF\\
+Email:}} 
+
+\maketitle
+
+\begin{abstract}
+Abstract.
+\end{abstract}
+
+\bibliographystyle{ieeetr}
+
+\end{document}
