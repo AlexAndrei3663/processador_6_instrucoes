@@ -3,7 +3,7 @@ module program_memory(input   logic [15:0] addr,
                       input   logic        rd,
                       output  logic [15:0] data);
 
-    logic [15:0] mem[15:0];
+    logic [15:0] mem[(2**16)-1:0];
 
     initial $readmemh("memfile.dat", mem);
     
